@@ -2,7 +2,26 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 const http = require('http');
 const { parse } = require('url');
-const next = require('next');
+// Diagnostic logging to help Passenger debugging (prints to stderr/stdout)
+console.error('Starting app.js diagnostics:')
+console.error('cwd:', process.cwd())
+console.error('node:', process.execPath, process.version)
+console.error('NODE_ENV:', process.env.NODE_ENV)
+try {
+  const nextPath = require.resolve('next')
+  console.error('next resolved at:', nextPath)
+} catch (e) {
+  console.error('next not resolvable via require.resolve: ', e && e.message)
+}
+try {
+  // require next with clearer error handling
+  var next = require('next')
+} catch (err) {
+  console.error('\nFATAL: failed to require("next"). This usually means dependencies were not installed.')
+  console.error('Error:', err && err.stack ? err.stack : err)
+  console.error('Ensure you ran `npm install` in the application directory, or use Plesk "Run Node.js commands" to install.')
+  process.exit(1)
+}
 
 // Ejecutable en Plesk/Passenger: escuchamos en process.env.PORT y en todas las interfaces
 const dev = process.env.NODE_ENV !== 'production';
