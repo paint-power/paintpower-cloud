@@ -1,3 +1,5 @@
+// Force production mode by default on the server so dev-only features (HMR/Turbopack) are not enabled
+process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 const http = require('http');
 const { parse } = require('url');
 const next = require('next');
